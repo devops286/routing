@@ -59,3 +59,44 @@ Chain OUTPUT (policy ACCEPT 190K packets, 95M bytes)
 
 ip route del 172.31.22.0/24 via 172.31.20.1 dev em1
 ip route add 172.31.22.0/24 via 172.31.20.1 dev em1
+
+[root@dny2d1sif02 ~]# ip route del 172.31.22.0/24 via 172.31.20.1 dev em1
+[root@dny2d1sif02 ~]# tracepath dny2d1vmd01
+ 1?: [LOCALHOST]                      pmtu 1500
+ 1:  10.5.10.2                                             0.480ms
+ 1:  10.5.10.2                                             0.372ms
+ 2:  no reply
+ 3:  no reply
+ 4:  no reply
+ 5:  no reply
+ 6:  no reply
+^C
+[root@dny2d1sif02 ~]# ip route add 172.31.22.0/24 via 172.31.20.1 dev em1
+[root@dny2d1sif02 ~]# tracepath dny2d1vmd01
+ 1?: [LOCALHOST]                      pmtu 1500
+ 1:  no reply
+ 2:  no reply
+ 3:  no reply
+ 4:  no reply
+ 5:  no reply
+ 6:  no reply
+ 7:  no reply
+ 8:  no reply
+ 9:  no reply
+^C
+[root@dny2d1sif02 ~]#  ping dny2d1vmd01
+PING dny2d1vmd01.srv.miax.local (172.31.22.16) 56(84) bytes of data.
+64 bytes from dny2d1vmd01.srv.miax.local (172.31.22.16): icmp_seq=1 ttl=63 time=0.205 ms
+64 bytes from dny2d1vmd01.srv.miax.local (172.31.22.16): icmp_seq=2 ttl=63 time=0.273 ms
+64 bytes from dny2d1vmd01.srv.miax.local (172.31.22.16): icmp_seq=3 ttl=63 time=0.257 ms
+64 bytes from dny2d1vmd01.srv.miax.local (172.31.22.16): icmp_seq=4 ttl=63 time=0.242 ms
+^C
+--- dny2d1vmd01.srv.miax.local ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3066ms
+rtt min/avg/max/mdev = 0.205/0.244/0.273/0.027 ms
+[root@dny2d1sif02 ~]# ssh dny2d1vmd01
+^C
+[root@dny2d1sif02 ~]# telnet 172.31.22.16 22
+Trying 172.31.22.16...
+^C
+[root@dny2d1sif02 ~]#
