@@ -1,3 +1,5 @@
+
+
 [root@dny2d1sif02 ~]#  ping dny2d1vmd01
 PING dny2d1vmd01.srv.miax.local (172.31.22.16) 56(84) bytes of data.
 64 bytes from dny2d1vmd01.srv.miax.local (172.31.22.16): icmp_seq=1 ttl=63 time=0.231 ms
@@ -53,3 +55,7 @@ Chain FORWARD (policy ACCEPT 0 packets, 0 bytes)
 Chain OUTPUT (policy ACCEPT 190K packets, 95M bytes)
  pkts bytes target     prot opt in     out     source               destination
 [root@dny2d1sif02 ~]#
+
+
+ip route del 172.31.22.0/24 via 172.31.20.1 dev em1
+ip route add 172.31.22.0/24 via 172.31.20.1 dev em1
