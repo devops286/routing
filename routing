@@ -1,0 +1,55 @@
+[root@dny2d1sif02 ~]#  ping dny2d1vmd01
+PING dny2d1vmd01.srv.miax.local (172.31.22.16) 56(84) bytes of data.
+64 bytes from dny2d1vmd01.srv.miax.local (172.31.22.16): icmp_seq=1 ttl=63 time=0.231 ms
+64 bytes from dny2d1vmd01.srv.miax.local (172.31.22.16): icmp_seq=2 ttl=63 time=0.301 ms
+64 bytes from dny2d1vmd01.srv.miax.local (172.31.22.16): icmp_seq=3 ttl=63 time=0.257 ms
+64 bytes from dny2d1vmd01.srv.miax.local (172.31.22.16): icmp_seq=4 ttl=63 time=0.256 ms
+64 bytes from dny2d1vmd01.srv.miax.local (172.31.22.16): icmp_seq=5 ttl=63 time=0.274 ms
+^C
+--- dny2d1vmd01.srv.miax.local ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 4112ms
+rtt min/avg/max/mdev = 0.231/0.263/0.301/0.030 ms
+[root@dny2d1sif02 ~]# tracepath dny2d1vmd01
+ 1?: [LOCALHOST]                      pmtu 1500
+ 1:  no reply
+ 2:  no reply
+ 3:  no reply
+ 4:  no reply
+^C
+[root@dny2d1sif02 ~]# route -n
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+0.0.0.0         10.5.10.1       0.0.0.0         UG    0      0        0 em2
+10.4.0.16       172.31.20.1     255.255.255.255 UGH   0      0        0 em1
+10.5.0.16       172.31.20.1     255.255.255.255 UGH   0      0        0 em1
+10.5.10.0       0.0.0.0         255.255.255.0   U     0      0        0 em2
+172.17.1.0      172.31.20.1     255.255.255.0   UG    0      0        0 em1
+172.21.16.0     172.31.20.1     255.255.255.0   UG    0      0        0 em1
+172.21.16.27    172.31.20.1     255.255.255.255 UGH   0      0        0 em1
+172.21.32.0     172.31.20.1     255.255.255.0   UG    0      0        0 em1
+172.31.20.0     0.0.0.0         255.255.255.0   U     0      0        0 em1
+172.31.22.0     172.31.20.1     255.255.255.0   UG    0      0        0 em1
+172.31.23.0     172.31.20.1     255.255.255.0   UG    0      0        0 em1
+172.31.30.24    172.31.20.1     255.255.255.255 UGH   0      0        0 em1
+172.31.35.0     172.31.20.1     255.255.255.0   UG    0      0        0 em1
+172.31.46.22    172.31.20.1     255.255.255.255 UGH   0      0        0 em1
+[root@dny2d1sif02 ~]# ip route add 172.31.22.0/24 via 172.31.20.1 dev em1
+RTNETLINK answers: File exists
+[root@dny2d1sif02 ~]# iptables -vnL
+Chain INPUT (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination
+ 173K   40M ACCEPT     all  --  *      *       0.0.0.0/0            0.0.0.0/0            state RELATED,ESTABLISHED
+ 3033  255K ACCEPT     icmp --  *      *       0.0.0.0/0            0.0.0.0/0
+  165 12235 ACCEPT     all  --  lo     *       0.0.0.0/0            0.0.0.0/0
+ 3051  165K ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            state NEW tcp dpt:22
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            state NEW tcp dpt:161
+  774 46440 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            state NEW tcp dpt:514
+    1    92 REJECT     all  --  *      *       0.0.0.0/0            0.0.0.0/0            reject-with icmp-host-prohibited
+
+Chain FORWARD (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination
+    0     0 REJECT     all  --  *      *       0.0.0.0/0            0.0.0.0/0            reject-with icmp-host-prohibited
+
+Chain OUTPUT (policy ACCEPT 190K packets, 95M bytes)
+ pkts bytes target     prot opt in     out     source               destination
+[root@dny2d1sif02 ~]#
